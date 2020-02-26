@@ -137,6 +137,13 @@ class MyDataBase:
         # print(ret_value)
         return ret_value
 
+    def get_all_users(self):
+        query = """
+                SELECT * 
+                FROM users
+                """
+        ret_value = self.conn.execute(query).fetchall()
+
     def get_word(self, id):
         query = """
                 SELECT * 

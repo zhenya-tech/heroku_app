@@ -20,10 +20,14 @@ app = Flask(__name__)
 count = 0
 
 
-
+@app.route("/")
 def func():
-    for i in range(5):
-        viber.send_messages("eXQrDJeQ+LhhwwwqSoAaiQ==", [TextMessage(text="Повтори слова")])
+    db = MyDataBase('database.db')
+    users = db.get_all_users()
+    for u in users:
+        round = db.get_last_round(u[0]["id"])
+        if datetime.datetime.now() - round[0]["time_round"] == datetime.timedelta(minutes=1):
+            viber.send_messages("eXQrDJeQ+LhhwwwqSoAaiQ==", [TextMessage(text="Повтори слова")])
     global count
     count += 1
     return f"hello {count}"
