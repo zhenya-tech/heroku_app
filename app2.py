@@ -20,7 +20,7 @@ app = Flask(__name__)
 count = 0
 
 
-@app.route("/")
+
 def func():
     for i in range(5):
         viber.send_messages("eXQrDJeQ+LhhwwwqSoAaiQ==", [TextMessage(text="Повтори слова")])
