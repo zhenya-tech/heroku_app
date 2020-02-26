@@ -255,7 +255,7 @@ def send_example(user):
     db.close()
 
 
-@app.route("/")
+@app.route("/", methods=['POST'])
 def hello():
     global count
     count += 1
