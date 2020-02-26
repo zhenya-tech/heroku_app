@@ -264,7 +264,7 @@ def hello():
 
 
 i = 0
-viber.send_messages("eXQrDJeQ+LhhwwwqSoAaiQ==", [TextMessage(text="Повтори слова")])
+# viber.send_messages("eXQrDJeQ+LhhwwwqSoAaiQ==", [TextMessage(text="Повтори слова")])
 
 @app.route("/incoming", methods=['POST'])
 def incoming():
