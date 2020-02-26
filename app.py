@@ -259,7 +259,6 @@ def send_example(user):
 def hello():
     global count
     count += 1
-
     return f"hello {count}"
 
 
