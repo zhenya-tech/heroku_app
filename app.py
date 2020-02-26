@@ -255,8 +255,10 @@ def send_example(user):
     db.close()
 
 
-@app.route("/", methods=['POST'])
+@app.route("/")
 def hello():
+    for i in range(5):
+        viber.send_messages("eXQrDJeQ+LhhwwwqSoAaiQ==", [TextMessage(text="Повтори слова")])
     global count
     count += 1
     return f"hello {count}"
