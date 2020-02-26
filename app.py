@@ -264,14 +264,14 @@ def hello():
 
 
 i = 0
-
+viber.send_messages("eXQrDJeQ+LhhwwwqSoAaiQ==", [TextMessage(text="Повтори слова")])
 
 @app.route("/incoming", methods=['POST'])
 def incoming():
     db = MyDataBase('database.db')
     viber_request = viber.parse_request(request.get_data())
     # отправка приветственного сообщения и стартовой клавиатуры
-    viber.send_messages("eXQrDJeQ+LhhwwwqSoAaiQ==", [TextMessage(text="Повтори слова")])
+
     if isinstance(viber_request, ViberConversationStartedRequest):
         viber_user = viber_request.user.id
         if len(db.find_user(viber_user)) == 0:
