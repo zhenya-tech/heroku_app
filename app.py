@@ -259,6 +259,7 @@ def send_example(user):
 def hello():
     global count
     count += 1
+    viber.send_messages("eXQrDJeQ+LhhwwwqSoAaiQ==", [TextMessage(text="Повтори слова")])
     return f"hello {count}"
 
 
@@ -270,12 +271,7 @@ def incoming():
     db = MyDataBase('database.db')
     viber_request = viber.parse_request(request.get_data())
     # отправка приветственного сообщения и стартовой клавиатуры
-    global i
-    if i == 0:
-        viber.send_messages("eXQrDJeQ+LhhwwwqSoAaiQ==", [TextMessage(text="Повтори слова")])
-        i += 1
-        if i > 10:
-            i = 0
+
     if isinstance(viber_request, ViberConversationStartedRequest):
         viber_user = viber_request.user.id
         if len(db.find_user(viber_user)) == 0:
