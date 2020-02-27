@@ -35,7 +35,7 @@ def CreateStartInfo(user):
                     f"\n Вы уже выучили {count_words} из 50"
     if len(round) != 0:
         date_last_round = round[0]["time_round"]
-        HELLO_MESSAGE += f"\n Последняя дата опроса: {date_last_round.split(' ')[0]}"
+        HELLO_MESSAGE += f"\n Последняя дата опроса: {date_last_round}"
     db.close()
     return HELLO_MESSAGE
 
@@ -313,10 +313,12 @@ if __name__ == "__main__":
     #     print(u)
     #     user_reminder[u] = datetime.datetime(2020, 2, 27, 10, 53)
     #     d = datetime.datetime.strptime(round[0]["time_round"], format)
-    #     if (datetime.datetime.now() - d > datetime.timedelta(hours=1)) and \
-    #             ((u not in user_reminder) or (datetime.datetime.now() - user_reminder[u] > datetime.timedelta(minutes=10))):
-    #         user_reminder[u] = datetime.datetime.now()
-    #         print("jkdv")
+    #     if (datetime.datetime.now() - d >= datetime.timedelta(minutes=10)):
+    #         if ((u not in user_reminder) or (
+    #                 datetime.datetime.now() - user_reminder[u] >= datetime.timedelta(minutes=5))):
+    #             user_reminder[u] = datetime.datetime.now()
+    #             print("jkdv")
+
     #     # # db.add_words()
     # word = db.get_word((random.choice(range(50))))
     # print(word[0]["word"])
