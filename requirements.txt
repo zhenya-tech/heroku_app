@@ -1,3 +1,4 @@
 gunicorn
 flask
 viberbot
+APScheduler==3.0.0
