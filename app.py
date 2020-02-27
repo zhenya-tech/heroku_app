@@ -301,10 +301,15 @@ def incoming():
                 get_answer(text, user)
     db.close()
     return Response(status=200)
-
+# from dateutil import tz
 # user_reminder = { }
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=80)
+    # utc = tz.UTC
+    # d = datetime.datetime.now()
+    # print(d)
+    # current_tz = tz.gettz()
+    # print(d.astimezone((current_tz)))
     # db = MyDataBase('database.db')
     # users = db.get_all_users()
     # format = "%Y-%m-%d %H:%M:%S.%f"
