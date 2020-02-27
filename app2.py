@@ -20,23 +20,27 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 
 sched = BlockingScheduler()
 
+
 @sched.scheduled_job('interval', minutes=1)
 def timed_job():
     # print('This job is run every three minutes.')
     db = MyDataBase('database.db')
     users = db.get_all_users()
+    format = "%Y-%m-%d %H:%M:%S.%f"
     for u in users:
         round = db.get_last_round(u["id"])
         d = datetime.datetime.strptime(round[0]["time_round"], format)
         if (datetime.datetime.now() - d > datetime.timedelta(hours=1)) and \
-                ((u not in user_reminder) or (user_reminder[u] > datetime.timedelta(minutes=10))):
+                ((u not in user_reminder) or (
+                        user_reminder[u] > datetime.datetime.now() - user_reminder[u] > datetime.timedelta(
+                    minutes=10))):
             user_reminder[u] = datetime.datetime.now()
             viber.send_messages(u["id"], [TextMessage(text="Время повторить слова", keyboard=START_KEYBOARD,
-                        tracking_data='tracking_data')])
+                                                      tracking_data='tracking_data')])
+
 
 # @sched.scheduled_job('cron', day_of_week='mon-fri', hour=17)
 # def scheduled_job():
 #     print('This job is run every weekday at 5pm.')
 
 sched.start()
-

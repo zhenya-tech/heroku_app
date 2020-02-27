@@ -257,14 +257,16 @@ def send_example(user):
 
 @app.route("/")
 def hello():
-    for i in range(5):
-        viber.send_messages("eXQrDJeQ+LhhwwwqSoAaiQ==", [TextMessage(text="Повтори слова")])
+    # for i in range(5):
+    #     viber.send_messages("eXQrDJeQ+LhhwwwqSoAaiQ==", [TextMessage(text="Повтори слова")])
     global count
     count += 1
     return f"hello {count}"
 
 
 i = 0
+
+
 # viber.send_messages("eXQrDJeQ+LhhwwwqSoAaiQ==", [TextMessage(text="Повтори слова")])
 
 @app.route("/incoming", methods=['POST'])
@@ -304,6 +306,15 @@ def incoming():
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=80)
     # db = MyDataBase('database.db')
+    # users = db.get_all_users()
+    # format = "%Y-%m-%d %H:%M:%S.%f"
+    # for u in users:
+    #     round = db.get_last_round(u["id"])
+    #     d = datetime.datetime.strptime(round[0]["time_round"], format)
+    #     if (datetime.datetime.now() - d > datetime.timedelta(hours=1)) and \
+    #             ((u not in user_reminder) or (datetime.datetime.now() - user_reminder[u] > datetime.timedelta(minutes=10))):
+    #         user_reminder[u] = datetime.datetime.now()
+    #         print("jkdv")
     #     # # db.add_words()
     # word = db.get_word((random.choice(range(50))))
     # print(word[0]["word"])
