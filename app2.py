@@ -30,11 +30,11 @@ def timed_job():
     for u in users:
         round = db.get_last_round(u["id"])
         d = datetime.datetime.strptime(round[0]["time_round"], format)
-        if datetime.datetime.utcnow() - d >= datetime.timedelta(minutes=10):
+        if datetime.datetime.utcnow() - d > datetime.timedelta(minutes=5):
             if ((u not in user_reminder) or (
-                    datetime.datetime.utcnow() - user_reminder[u] >= datetime.timedelta(minutes=5))):
+                    datetime.datetime.utcnow() - user_reminder[u] > datetime.timedelta(minutes=3))):
                 user_reminder[u] = datetime.datetime.utcnow()
-                viber.send_messages(u["viber_id"], [TextMessage(text="Время повторить слова", keyboard=START_KEYBOARD,
+                viber.send_messages(u["viber_id"], [TextMessage(text=f"Время повторить слова {user_reminder[u]}", keyboard=START_KEYBOARD,
                                                                 tracking_data='tracking_data')])
 
 
