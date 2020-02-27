@@ -170,7 +170,7 @@ def choose_word(user):
     word = db.get_word((random.choice(range(50))))
     learning = db.find_learning(user[0]["id"], word[0]["id"])
     if len(learning) == 0:
-        db.add_learning(user[0]["id"], word[0]["id"], datetime.datetime.now())
+        db.add_learning(user[0]["id"], word[0]["id"], datetime.datetime.utcnow())
     else:
         right_answer = learning[0]["right_answer"]
         if right_answer >= 20:
@@ -229,7 +229,7 @@ def get_answer(text, user):
     if text == word[0]["translation"]:
         db.change_correct_count(user[0]["id"], round[0]["id"])
         db.change_right_answer(user[0]["id"], word[0]["id"])
-        db.change_time_last_answer(user[0]["id"], word[0]["id"], datetime.datetime.now())
+        db.change_time_last_answer(user[0]["id"], word[0]["id"], datetime.datetime.utcnow())
         correct = 'Верно'
     db.change_count_answer(user[0]["id"], round[0]["id"])
     # отправка следующего сообщения пользователю
@@ -289,7 +289,7 @@ def incoming():
             # получаем сообщение от пользователя
             text = message.text
             if text == 'Старт':
-                db.add_round(user[0]["id"], datetime.datetime.now())
+                db.add_round(user[0]["id"], datetime.datetime.utcnow())
                 send_message(user, None)
             elif text == "Информация":
                 viber.send_messages(user[0]["viber_id"], [
