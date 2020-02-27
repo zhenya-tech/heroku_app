@@ -332,3 +332,14 @@ if __name__ == "__main__":
     # s = datetime.datetime.now().strftime(format)
     # print(s)
     # print(datetime.datetime.now().month)
+    # users = db.get_all_users()
+    # format = "%Y-%m-%d %H:%M:%S.%f"
+    # for u in users:
+    #     round = db.get_last_round(u["id"])
+    #     # print(round)
+    #     # print(round[0]["time_round"])
+    #     # print(type(round[0]["time_round"]))
+    #     d = datetime.datetime.strptime(round[0]["time_round"], format)
+    #     # print(type(d))
+    #     if datetime.datetime.now() - d > datetime.timedelta(hours=1):
+    #         print("kjf")

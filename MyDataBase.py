@@ -143,6 +143,7 @@ class MyDataBase:
                 FROM users
                 """
         ret_value = self.conn.execute(query).fetchall()
+        return ret_value
 
     def get_word(self, id):
         query = """
