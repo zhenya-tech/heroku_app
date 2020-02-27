@@ -302,7 +302,7 @@ def incoming():
     db.close()
     return Response(status=200)
 
-
+# user_reminder = { }
 if __name__ == "__main__":
     app.run(host="127.0.0.1", port=80)
     # db = MyDataBase('database.db')
@@ -310,6 +310,8 @@ if __name__ == "__main__":
     # format = "%Y-%m-%d %H:%M:%S.%f"
     # for u in users:
     #     round = db.get_last_round(u["id"])
+    #     print(u)
+    #     user_reminder[u] = datetime.datetime(2020, 2, 27, 10, 53)
     #     d = datetime.datetime.strptime(round[0]["time_round"], format)
     #     if (datetime.datetime.now() - d > datetime.timedelta(hours=1)) and \
     #             ((u not in user_reminder) or (datetime.datetime.now() - user_reminder[u] > datetime.timedelta(minutes=10))):
