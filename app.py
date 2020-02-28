@@ -408,7 +408,12 @@ def incoming():
 # user_reminder = { }
 if __name__ == "__main__":
     # Base.metadata.create_all(engine)
-    app.run(host="127.0.0.1", port=80)
+    # app.run(host="127.0.0.1", port=80)
+    session = Session()
+    users = session.query(User)
+    format = "%Y-%m-%d %H:%M:%S.%f"
+    for u in users:
+        print(u)
     # utc = tz.UTC
     # d = datetime.datetime.now()
     # print(d)

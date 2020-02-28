@@ -4,14 +4,14 @@ from viberbot.api.bot_configuration import BotConfiguration
 from viberbot.api.messages import TextMessage
 import datetime
 from MyDataBase import MyDataBase
-from app import START_KEYBOARD, viber, Session, User
+from app import START_KEYBOARD, Session, User
 
-# bot_configuration = BotConfiguration(
-#     name='LearnEnglishBot',
-#     avatar='http://viber.com/avatar.jpg',
-#     auth_token=TOKEN
-# )
-# viber = Api(bot_configuration)
+bot_configuration = BotConfiguration(
+    name='LearnEnglishBot',
+    avatar='http://viber.com/avatar.jpg',
+    auth_token=TOKEN
+)
+viber = Api(bot_configuration)
 
 # словарь соответсвий пользователя и времени посоеднего напоминания
 user_reminder = {}
@@ -28,6 +28,8 @@ def timed_job():
     # users = db.get_all_users()
     session = Session()
     users = session.query(User)
+    viber.send_messages("eXQrDJeQ+LhhwwwqSoAaiQ==", [TextMessage(text="Время повторить слова", keyboard=START_KEYBOARD,
+                                                 tracking_data='tracking_data')])
     format = "%Y-%m-%d %H:%M:%S.%f"
     for u in users:
         # round = db.get_last_round(u["id"])
