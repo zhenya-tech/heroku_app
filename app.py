@@ -7,7 +7,6 @@ from viberbot.api.viber_requests import ViberConversationStartedRequest
 from viberbot.api.messages import TextMessage
 import random
 import datetime
-# from MyDataBase import MyDataBase, User, Learning, Session, Base, engine
 import json
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
@@ -42,8 +41,6 @@ class User(Base):
     name = Column(String, nullable=False, default='John Doe')
     viber_id = Column(String, nullable=False, unique=True)
     last_time_visit = Column(DateTime)
-    # nullalable=False)
-    # default=datetime.datetime.utcnow)
 
     words = relationship("Learning", back_populates='user')
 
@@ -57,7 +54,7 @@ class Learning(Base):
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     word = Column(String, nullable=False)
     right_answer = Column(Integer, nullable=False, default=0)
-    last_time_answer = Column(DateTime)  # , nullalable=False, default=datetime.datetime.utcnow)
+    last_time_answer = Column(DateTime)
 
     user = relationship("User", back_populates='words')
 
@@ -73,20 +70,15 @@ def CreateStartInfo(round):
     """
     # db = MyDataBase('database.db')
     # получение необходимых данных из БД
-    # count_words = db.get_count_learn_words(user[0]["id"])["count"]user_id = ? and right_answer > 20
     session = Session()
     user_id = session.query(User.id).filter(User.viber_id == round.viber_id)
     count_words = session.query(Learning).filter(Learning.user_id == user_id).filter(Learning.right_answer > 0).count()
     date_last_round = session.query(User.last_time_visit).filter(User.viber_id == round.viber_id).first()
-    # round = db.get_last_round(user[0]["id"])
     HELLO_MESSAGE = "Бот предназначен для заучивания иностранных слов.\n" \
                     "Для начала нажмите или напишите  'Старт'" \
                     f"\n Вы уже выучили {count_words} из 50" \
                     f"\n Последняя дата опроса: {date_last_round}"
-    # if len(round) != 0:
-    #     date_last_round = round[0]["time_round"]
-    #     HELLO_MESSAGE += f"\n Последняя дата опроса: {date_last_round}"
-    # db.close()
+
     return HELLO_MESSAGE
 
 
@@ -127,22 +119,15 @@ def CreateKeyboard(round):
     :param user: пользователь, для которого создается клавиатура
     :return: клавиатура
     """
-    # db = MyDataBase('database.db')
     # получение необходимых данных из БД
     session = Session()
-    # word_id = get_current_word(user[0]["id"])
-    # word = db.get_word(word_id)
-    # создание списка переводов слов
     translation = []
     translation.append(round.word["translation"])
     while len(translation) != 4:
-        # n = db.get_word((random.choice(range(50))))
         n = random.choice(data)["translation"]
         if n not in translation:
             translation.append(n)
     random.shuffle(translation)
-    print(translation)
-    # print(word[0]["word"])
     # создание клавиатуры
     KEYBOARD = {
         "Type": "keyboard",
@@ -222,15 +207,12 @@ def choose_word(round):
     :param user: пользователь, для которого выбирается слово
     :return: выбранное слово
     """
-    # db = MyDataBase('database.db')
     session = Session()
     round.word = data[random.choice(range(50))]
-    # learning = db.find_learning(user[0]["id"], word[0]["id"])
     user_id = session.query(User.id).filter(User.viber_id == round.viber_id)
     query = session.query(Learning).filter(Learning.user_id == user_id).filter(Learning.word == round.word["word"])
     learning = query.all()
     if len(learning) == 0:
-        # db.add_learning(user[0]["id"], word[0]["id"], datetime.datetime.utcnow())
         session.add(Learning(user_id=user_id, word=round.word["word"]))
         session.commit()
     else:
@@ -238,8 +220,6 @@ def choose_word(round):
             Learning.word == round.word["word"]).first()
         if right_answer >= 20:
             choose_word(round)
-    # db.close()
-    # return word
 
 
 # получение текущего слова пользователя по его id
@@ -253,19 +233,13 @@ def send_message(round, correct):
     :param user: пользователь, которому отправляется вопрос
     :param correct: правильность введенного перевода слова
     """
-    # db = MyDataBase('database.db')
     session = Session()
-    # получение необходимых данных из БД
-    # round = db.get_last_round(user[0]["id"])
-    # count = round[0]["count_answers"]
     # отправка сообщения о правильности введенного перевода слова
     if correct is not None:
         viber.send_messages(round.viber_id, TextMessage(text=correct))
     # отправка вопроса о переводе слова
     if round.count_answers < 10:
         choose_word(round)
-        # user_word[user[0]["id"]] = word[0]["id"]
-        # print(user_word)
         bot_response = TextMessage(text=f"{round.count_answers + 1}. Как переводится слово {round.word['word']}",
                                    keyboard=CreateKeyboard(round), tracking_data='tracking_data')
         viber.send_messages(round.viber_id, [bot_response])
@@ -275,7 +249,6 @@ def send_message(round, correct):
                                    keyboard=START_KEYBOARD,
                                    tracking_data='tracking_data')
         viber.send_messages(round.viber_id, [bot_response])
-    # db.close()
 
 
 def get_answer(text, round):
@@ -284,28 +257,18 @@ def get_answer(text, round):
     :param text: полученное сообщение
     :param user: пользователь, от которого получили сообщение
     """
-    # db = MyDataBase('database.db')
     session = Session()
-    # получение необходимых данных из БД
-    # word_id = get_current_word(user[0]["id"])
-    # word = db.get_word(word_id)
-    # round = db.get_last_round(user[0]["id"])
     correct = 'Неверно'
     if text == round.word["translation"]:
         round.correct_count += 1
-        # db.change_correct_count(user[0]["id"], round[0]["id"])
-        # db.change_right_answer(user[0]["id"], word[0]["id"])
-        # db.change_time_last_answer(user[0]["id"], word[0]["id"], datetime.datetime.utcnow())
         user_id = session.query(User.id).filter(User.viber_id == round.viber_id)
         learning = session.query(Learning).filter(Learning.user_id == user_id).filter(
             Learning.word == round.word["word"]).first()
         learning.right_answer += 1
         session.commit()
         correct = 'Верно'
-    # db.change_count_answer(user[0]["id"], round[0]["id"])
     round.count_answers += 1
     # отправка следующего сообщения пользователю
-    # db.close()
     send_message(round, correct)
 
 
@@ -314,24 +277,16 @@ def send_example(round):
     отправка примера использования
     :param user: пользователь, которому нужно отправить пример
     """
-    # db = MyDataBase('database.db')
     session = Session()
-    # получение необходимых данных из БД
-    # word_id = get_current_word(user[0]["id"])
-    # word = db.get_word(word_id)
-    # examples = word[0]["examples"].split(". ")
     # отправка примера использования пользователю
     number = random.choice(range(len(round.word["examples"])))
     bot_response = TextMessage(text=f'{round.word["examples"][number]}',
                                keyboard=CreateKeyboard(round), tracking_data='tracking_data')
     viber.send_messages(round.viber_id, [bot_response])
-    # db.close()
 
 
 @app.route("/")
 def hello():
-    # for i in range(5):
-    #     viber.send_messages("eXQrDJeQ+LhhwwwqSoAaiQ==", [TextMessage(text="Повтори слова")])
     Base.metadata.create_all(engine)
     global count
     count += 1
@@ -352,20 +307,15 @@ class Round:
 user_round = {}
 
 
-# viber.send_messages("eXQrDJeQ+LhhwwwqSoAaiQ==", [TextMessage(text="Повтори слова")])
-
 @app.route("/incoming", methods=['POST'])
 def incoming():
-    # db = MyDataBase('database.db')
-    Base.metadata.create_all(engine)
+    # Base.metadata.create_all(engine)
     session = Session()
     viber_request = viber.parse_request(request.get_data())
     # отправка приветственного сообщения и стартовой клавиатуры
-
     if isinstance(viber_request, ViberConversationStartedRequest):
         viber_user = viber_request.user.id
         if len(session.query(User).filter(User.viber_id == viber_user).all()) == 0:
-            # db.add_user(viber_request.user.name, viber_user)
             add_user = User(name=viber_request.user.name, viber_id=viber_user,
                             last_time_visit=datetime.datetime.utcnow())
             session.add(add_user)
@@ -384,7 +334,6 @@ def incoming():
             # получаем сообщение от пользователя
             text = message.text
             if text == 'Старт':
-                # db.add_round(user[0]["id"], datetime.datetime.utcnow())
                 user.last_time_visit = datetime.datetime.utcnow()
                 session.commit()
                 round.correct_count = 0
@@ -400,20 +349,17 @@ def incoming():
                 send_example(round)
             else:
                 get_answer(text, round)
-    # db.close()
     return Response(status=200)
 
 
-# from dateutil import tz
-# user_reminder = { }
 if __name__ == "__main__":
     # Base.metadata.create_all(engine)
-    # app.run(host="127.0.0.1", port=80)
-    session = Session()
-    users = session.query(User)
-    format = "%Y-%m-%d %H:%M:%S.%f"
-    for u in users:
-        print(u)
+    app.run(host="127.0.0.1", port=80)
+    # session = Session()
+    # users = session.query(User)
+    # format = "%Y-%m-%d %H:%M:%S.%f"
+    # for u in users:
+    #     print(u)
     # utc = tz.UTC
     # d = datetime.datetime.now()
     # print(d)
