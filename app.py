@@ -16,6 +16,7 @@ from sqlalchemy import Column
 from sqlalchemy import Integer, String, DateTime
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
+
 bot_configuration = BotConfiguration(
     name='LearnEnglishBot',
     avatar='http://viber.com/avatar.jpg',
@@ -27,7 +28,8 @@ app = Flask(__name__)
 user_word = {}  # словарь соответсвий между пользователем и текущим словом
 # DATABASE_URI = "postgres+psycopg2://postgres:postgres@localhost:5432/my_database"
 # DATABASE_URL = 'sqlite:///example.db'
-engine = create_engine("postgres://zekcwysghqwafo:72ad986bc47af26e645d46536e9a068a53c542636bef2163e8505dfd7fc1e891@ec2-176-34-97-213.eu-west-1.compute.amazonaws.com:5432/d1mg673iukln9t")
+engine = create_engine(
+    "postgres://zekcwysghqwafo:72ad986bc47af26e645d46536e9a068a53c542636bef2163e8505dfd7fc1e891@ec2-176-34-97-213.eu-west-1.compute.amazonaws.com:5432/d1mg673iukln9t")
 
 Base = declarative_base()
 
@@ -40,8 +42,8 @@ class User(Base):
     name = Column(String, nullable=False, default='John Doe')
     viber_id = Column(String, nullable=False, unique=True)
     last_time_visit = Column(DateTime)
-                             # nullalable=False)
-                             # default=datetime.datetime.utcnow)
+    # nullalable=False)
+    # default=datetime.datetime.utcnow)
 
     words = relationship("Learning", back_populates='user')
 
@@ -55,12 +57,13 @@ class Learning(Base):
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     word = Column(String, nullable=False)
     right_answer = Column(Integer, nullable=False, default=0)
-    last_time_answer = Column(DateTime)#, nullalable=False, default=datetime.datetime.utcnow)
+    last_time_answer = Column(DateTime)  # , nullalable=False, default=datetime.datetime.utcnow)
 
     user = relationship("User", back_populates='words')
 
     def __pepr__(self):
         return f'{self.id}: {self.user_id}[{self.word} / {self.right_answer}]'
+
 
 def CreateStartInfo(round):
     """
@@ -78,7 +81,7 @@ def CreateStartInfo(round):
     # round = db.get_last_round(user[0]["id"])
     HELLO_MESSAGE = "Бот предназначен для заучивания иностранных слов.\n" \
                     "Для начала нажмите или напишите  'Старт'" \
-                    f"\n Вы уже выучили {count_words} из 50"\
+                    f"\n Вы уже выучили {count_words} из 50" \
                     f"\n Последняя дата опроса: {date_last_round}"
     # if len(round) != 0:
     #     date_last_round = round[0]["time_round"]
@@ -363,7 +366,8 @@ def incoming():
         viber_user = viber_request.user.id
         if len(session.query(User).filter(User.viber_id == viber_user).all()) == 0:
             # db.add_user(viber_request.user.name, viber_user)
-            add_user = User(name=viber_request.user.name, viber_id=viber_user, last_time_visit=datetime.datetime.utcnow())
+            add_user = User(name=viber_request.user.name, viber_id=viber_user,
+                            last_time_visit=datetime.datetime.utcnow())
             session.add(add_user)
             session.commit()
         new_round = Round(viber_user)
