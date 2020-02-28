@@ -36,7 +36,7 @@ def timed_job():
             if ((u not in user_reminder) or (
                     datetime.datetime.utcnow() - user_reminder[u] > datetime.timedelta(minutes=3))):
                 user_reminder[u] = datetime.datetime.utcnow()
-                viber.send_messages(u.viber_id, [TextMessage(text=f"{datetime.datetime.utcnow() - d}Время {d}повторить слова {user_reminder[u]}", keyboard=START_KEYBOARD,
+                viber.send_messages(u.viber_id, [TextMessage(text="Время повторить слова", keyboard=START_KEYBOARD,
                                                                 tracking_data='tracking_data')])
 
 
