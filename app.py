@@ -26,8 +26,8 @@ app = Flask(__name__)
 
 user_word = {}  # словарь соответсвий между пользователем и текущим словом
 # DATABASE_URI = "postgres+psycopg2://postgres:postgres@localhost:5432/my_database"
-DATABASE_URL = 'sqlite:///example.db'
-engine = create_engine("DATABASE_URL")
+# DATABASE_URL = 'sqlite:///example.db'
+engine = create_engine("postgres://zekcwysghqwafo:72ad986bc47af26e645d46536e9a068a53c542636bef2163e8505dfd7fc1e891@ec2-176-34-97-213.eu-west-1.compute.amazonaws.com:5432/d1mg673iukln9t")
 
 Base = declarative_base()
 
