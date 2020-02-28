@@ -1,5 +1,9 @@
 import sqlite3
 import json
+import os
+import psycopg2
+
+# DATABASE_URL = os.environ['DATABASE_URL']
 
 
 class MyDataBase:
@@ -177,3 +181,50 @@ class MyDataBase:
         # print(len(ret_value))
         print(ret_value)
         return ret_value
+
+
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy import Column
+from sqlalchemy import Integer, String, DateTime
+from sqlalchemy import ForeignKey
+from sqlalchemy.orm import relationship
+import datetime
+
+DATABASE_URI = "postgres+psycopg2://postgres:postgres@localhost:5432/my_database"
+
+engine = create_engine(DATABASE_URI)
+
+Base = declarative_base()
+
+Session = sessionmaker(engine)
+
+
+class User(Base):
+    __tablename__ = 'users'
+    id = Column(Integer, primary_key=True)
+    name = Column(String, nullable=False, default='John Doe')
+    viber_id = Column(String, nullable=False, unique=True)
+    last_time_visit = Column(DateTime,
+                             nullalable=False,
+                             default=datetime.datetime.utcnow())
+
+    words = relationship("Learning", back_populates='user')
+
+    def __repr__(self):
+        return f'{self.id}: {self.name}[{self.viber_id}]'
+
+
+class Learning(Base):
+    __tablename__ = 'learning'
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    word = Column(String, nullable=False)
+    right_answer = Column(Integer, nullable=False, default=0)
+    last_time_answer = Column(DateTime, nullalable=False, default=datetime.datetime.utcnow)
+
+    user = relationship("User", back_populates='words')
+
+    def __pepr__(self):
+        return f'{self.id}: {self.user_id}[{self.word} / {self.right_answer}]'

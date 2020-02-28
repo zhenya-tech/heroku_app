@@ -2,3 +2,5 @@ venv
 **/__pycache__
 ngrok.exe
 database.db
+.env
+example.db
