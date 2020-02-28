@@ -28,7 +28,7 @@ user_word = {}  # словарь соответсвий между пользо�
 # DATABASE_URI = "postgres+psycopg2://postgres:postgres@localhost:5432/my_database"
 # DATABASE_URL = 'sqlite:///example.db'
 engine = create_engine(
-    "postgres://zekcwysghqwafo:72ad986bc47af26e645d46536e9a068a53c542636bef2163e8505dfd7fc1e891@ec2-176-34-97-213.eu-west-1.compute.amazonaws.com:5432/d1mg673iukln9t")
+    "postgres://irgxsiuwihwbuu:0644f4fbe12aa7051efefb7e04f0d8ce485ed600c0ddc57c4c31b20819f07178@ec2-54-75-231-215.eu-west-1.compute.amazonaws.com:5432/dfd2em5rqfdsv7")
 
 Base = declarative_base()
 
