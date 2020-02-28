@@ -329,6 +329,7 @@ def send_example(round):
 def hello():
     # for i in range(5):
     #     viber.send_messages("eXQrDJeQ+LhhwwwqSoAaiQ==", [TextMessage(text="Повтори слова")])
+    Base.metadata.create_all(engine)
     global count
     count += 1
     return f"hello {count}"
@@ -353,7 +354,7 @@ user_round = {}
 @app.route("/incoming", methods=['POST'])
 def incoming():
     # db = MyDataBase('database.db')
-
+    Base.metadata.create_all(engine)
     session = Session()
     viber_request = viber.parse_request(request.get_data())
     # отправка приветственного сообщения и стартовой клавиатуры
