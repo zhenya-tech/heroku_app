@@ -28,7 +28,7 @@ user_word = {}  # словарь соответсвий между пользо�
 # DATABASE_URI = "postgres+psycopg2://postgres:postgres@localhost:5432/my_database"
 # DATABASE_URL = 'sqlite:///example.db'
 engine = create_engine(
-    "postgres://fjbynyvdkpwher:0f4e34b9651694e28f6ea8965449807b2fbaba24e8dc662ae1f052afe3eec1ae@ec2-176-34-97-213.eu-west-1.compute.amazonaws.com:5432/dpaumvmirqfp6")
+    "postgres://hywderztxhktlr:2a1d8b6ae1373755cacf1b4f80e6039fb6d7cf43b74d987299cce3dfeceaebb3@ec2-54-217-204-34.eu-west-1.compute.amazonaws.com:5432/d5vh973oiljtp9")
 
 Base = declarative_base()
 
@@ -310,7 +310,7 @@ user_round = {}
 
 @app.route("/incoming", methods=['POST'])
 def incoming():
-    # Base.metadata.create_all(engine)
+    Base.metadata.create_all(engine)
     session = Session()
     viber_request = viber.parse_request(request.get_data())
     # отправка приветственного сообщения и стартовой клавиатуры
