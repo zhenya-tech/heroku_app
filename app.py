@@ -28,7 +28,7 @@ user_word = {}  # словарь соответсвий между пользо�
 # DATABASE_URI = "postgres+psycopg2://postgres:postgres@localhost:5432/my_database"
 # DATABASE_URL = 'sqlite:///example.db'
 engine = create_engine(
-    "postgres://irgxsiuwihwbuu:0644f4fbe12aa7051efefb7e04f0d8ce485ed600c0ddc57c4c31b20819f07178@ec2-54-75-231-215.eu-west-1.compute.amazonaws.com:5432/dfd2em5rqfdsv7")
+    "postgres://fjbynyvdkpwher:0f4e34b9651694e28f6ea8965449807b2fbaba24e8dc662ae1f052afe3eec1ae@ec2-176-34-97-213.eu-west-1.compute.amazonaws.com:5432/dpaumvmirqfp6")
 
 Base = declarative_base()
 
@@ -40,7 +40,8 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False, default='John Doe')
     viber_id = Column(String, nullable=False, unique=True)
-    last_time_visit = Column(DateTime)
+    last_time_visit = Column(DateTime, nullable=False)
+    time_reminder = Column(DateTime)
 
     words = relationship("Learning", back_populates='user')
 
@@ -54,7 +55,7 @@ class Learning(Base):
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     word = Column(String, nullable=False)
     right_answer = Column(Integer, nullable=False, default=0)
-    last_time_answer = Column(DateTime)
+    last_time_answer = Column(DateTime, nullable=False)
 
     user = relationship("User", back_populates='words')
 
@@ -335,6 +336,7 @@ def incoming():
             text = message.text
             if text == 'Старт':
                 user.last_time_visit = datetime.datetime.utcnow()
+                user.time_reminder = datetime.datetime.utcnow() + datetime.timedelta(minutes=5)
                 session.commit()
                 round.correct_count = 0
                 round.count_answers = 0
@@ -347,6 +349,9 @@ def incoming():
                         tracking_data='tracking_data')])
             elif text == 'Пример использования':
                 send_example(round)
+            elif text == 'Напомнить':
+                user.time_reminder = datetime.datetime.utcnow() + datetime.timedelta(minutes=3)
+                session.commit()
             else:
                 get_answer(text, round)
     return Response(status=200)
