@@ -310,7 +310,7 @@ user_round = {}
 
 @app.route("/incoming", methods=['POST'])
 def incoming():
-    # Base.metadata.create_all(engine)
+    Base.metadata.create_all(engine)
     session = Session()
     viber_request = viber.parse_request(request.get_data())
     # отправка приветственного сообщения и стартовой клавиатуры
