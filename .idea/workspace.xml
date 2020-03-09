@@ -39,7 +39,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.app">
+  <component name="RunManager" selected="Python.set_webhook">
     <configuration name="app" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="LR5" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -84,8 +84,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.app" />
         <item itemvalue="Python.set_webhook" />
+        <item itemvalue="Python.app" />
       </list>
     </recent_temporary>
   </component>
