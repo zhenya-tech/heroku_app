@@ -26,9 +26,9 @@ app = Flask(__name__)
 
 user_word = {}  # словарь соответсвий между пользователем и текущим словом
 # DATABASE_URI = "postgres+psycopg2://postgres:postgres@localhost:5432/my_database"
-# DATABASE_URL = 'sqlite:///example.db'
+DATABASE_URL = 'sqlite:///example.db'
 engine = create_engine(
-    "postgres://hywderztxhktlr:2a1d8b6ae1373755cacf1b4f80e6039fb6d7cf43b74d987299cce3dfeceaebb3@ec2-54-217-204-34.eu-west-1.compute.amazonaws.com:5432/d5vh973oiljtp9")
+    "postgres://clpxlygmrebdxl:fa8efd85deb71c727281267814986039754357295a78daeae0faa8850d13ff9f@ec2-54-217-204-34.eu-west-1.compute.amazonaws.com:5432/den76vu4cvm5ie")
 
 Base = declarative_base()
 
@@ -40,7 +40,7 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False, default='John Doe')
     viber_id = Column(String, nullable=False, unique=True)
-    last_time_visit = Column(DateTime, nullable=False)
+    last_time_visit = Column(DateTime)
     time_reminder = Column(DateTime)
 
     words = relationship("Learning", back_populates='user')
@@ -55,7 +55,7 @@ class Learning(Base):
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     word = Column(String, nullable=False)
     right_answer = Column(Integer, nullable=False, default=0)
-    last_time_answer = Column(DateTime, nullable=False)
+    last_time_answer = Column(DateTime)
 
     user = relationship("User", back_populates='words')
 

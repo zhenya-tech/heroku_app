@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b416619e-41f1-4991-a78d-c8ce64f3e5c2" name="Default Changelist" comment="" />
+    <list default="true" id="b416619e-41f1-4991-a78d-c8ce64f3e5c2" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/settings.py" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,7 +39,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.set_webhook">
+  <component name="RunManager" selected="Python.app">
     <configuration name="app" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="LR5" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -80,8 +84,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.set_webhook" />
         <item itemvalue="Python.app" />
+        <item itemvalue="Python.set_webhook" />
       </list>
     </recent_temporary>
   </component>
