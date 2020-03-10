@@ -28,7 +28,7 @@ user_word = {}  # словарь соответсвий между пользо�
 # DATABASE_URI = "postgres+psycopg2://postgres:postgres@localhost:5432/my_database"
 DATABASE_URL = 'sqlite:///example.db'
 engine = create_engine(
-    "postgres://dbpfplhpnywogj:ae90b350bdbb0d1315550526635af072f165a6178320db3f9dd1e5b936edffea@ec2-46-137-84-140.eu-west-1.compute.amazonaws.com:5432/dbagnpr9f1gjj3")
+    "postgres://nctxttulyxpglk:2a5fd28fd846b9ca695d40c16020ba14202ebabb323f9211a41b3904173d3a05@ec2-46-137-84-140.eu-west-1.compute.amazonaws.com:5432/ddl26g1ndq1e4q")
 
 Base = declarative_base()
 
@@ -358,7 +358,7 @@ def incoming():
 
 
 if __name__ == "__main__":
-    # Base.metadata.create_all(engine)
+    Base.metadata.create_all(engine)
     app.run(host="127.0.0.1", port=80)
     # session = Session()
     # users = session.query(User)
