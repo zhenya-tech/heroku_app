@@ -29,7 +29,7 @@ user_word = {}  # словарь соответсвий между пользо�
 # DATABASE_URI = "postgres+psycopg2://postgres:postgres@localhost:5432/my_database"
 DATABASE_URL = 'sqlite:///example.db'
 engine = create_engine(
-    "postgres://nctxttulyxpglk:2a5fd28fd846b9ca695d40c16020ba14202ebabb323f9211a41b3904173d3a05@ec2-46-137-84-140.eu-west-1.compute.amazonaws.com:5432/ddl26g1ndq1e4q",
+    "postgres://iugcszooimhjyj:54e18cee2a2f2fce2d56bbec399eb17e66b7de3310da81a26173ca1e0659f9d0@ec2-46-137-84-140.eu-west-1.compute.amazonaws.com:5432/dcjnq9kgdmruuv",
     poolclass=NullPool)
 
 Base = declarative_base()
@@ -332,7 +332,7 @@ def incoming():
             text = message.text
             if text == 'Старт':
                 user.last_time_visit = datetime.datetime.utcnow()
-                user.time_reminder = datetime.datetime.utcnow() + datetime.timedelta(minutes=5)
+                user.time_reminder = datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
                 session.commit()
                 round.correct_count = 0
                 round.count_answers = 0
@@ -346,7 +346,7 @@ def incoming():
             elif text == 'Пример использования':
                 send_example(round)
             elif text == 'Напомнить  через 30 минут':
-                user.time_reminder = datetime.datetime.utcnow() + datetime.timedelta(minutes=3)
+                user.time_reminder = datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
                 session.commit()
             else:
                 get_answer(text, round)

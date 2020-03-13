@@ -61,7 +61,7 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 sched = BlockingScheduler()
 
 
-@sched.scheduled_job('interval', minutes=1)
+@sched.scheduled_job('interval', minutes=10)
 def timed_job():
     session = Session()
     users = session.query(User)
@@ -70,8 +70,8 @@ def timed_job():
             bot_response = TextMessage(text='Время повторить слова',
                                        keyboard=REMIND_KEYBOARD, tracking_data='tracking_data')
             print(u.viber_id)
-            viber.send_messages(u.viber_id, 
-                            [bot_response])
+            viber.send_messages(u.viber_id, [bot_response])
+    session.close()
 
 
 sched.start()
