@@ -15,6 +15,7 @@ from sqlalchemy import Column
 from sqlalchemy import Integer, String, DateTime
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship
+from sqlalchemy.pool import NullPool
 
 bot_configuration = BotConfiguration(
     name='LearnEnglishBot',
@@ -28,13 +29,14 @@ user_word = {}  # словарь соответсвий между пользо�
 # DATABASE_URI = "postgres+psycopg2://postgres:postgres@localhost:5432/my_database"
 DATABASE_URL = 'sqlite:///example.db'
 engine = create_engine(
-    "postgres://nctxttulyxpglk:2a5fd28fd846b9ca695d40c16020ba14202ebabb323f9211a41b3904173d3a05@ec2-46-137-84-140.eu-west-1.compute.amazonaws.com:5432/ddl26g1ndq1e4q")
+    "postgres://nctxttulyxpglk:2a5fd28fd846b9ca695d40c16020ba14202ebabb323f9211a41b3904173d3a05@ec2-46-137-84-140.eu-west-1.compute.amazonaws.com:5432/ddl26g1ndq1e4q",
+    poolclass=NullPool)
 
 Base = declarative_base()
 
 Session = sessionmaker(engine)
 
-
+# таблица "Пользователь"
 class User(Base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True)
@@ -48,7 +50,7 @@ class User(Base):
     def __repr__(self):
         return f'{self.id}: {self.name}[{self.viber_id}]'
 
-
+# таблица "Изучение"
 class Learning(Base):
     __tablename__ = 'learning'
     id = Column(Integer, primary_key=True)
@@ -62,11 +64,22 @@ class Learning(Base):
     def __pepr__(self):
         return f'{self.id}: {self.user_id}[{self.word} / {self.right_answer}]'
 
+# класс "Раунд", для хранения информации о текущем раунде пользователя
+class Round:
+    def __init__(self, viber_id):
+        self.viber_id = viber_id
+        self.word = {}
+        self.count_answers = 0
+        self.correct_count = 0
+
+
+user_round = {}  # словарь соответствий между пользователем и текущим раундом
+
 
 def CreateStartInfo(round):
     """
     создание информационного сообщения для пользователя
-    :param user: пользователь, для которого создается сообщение
+    :param round: раунд пользователя, для которого создается сообщение
     :return: информационное сообщение
     """
     # db = MyDataBase('database.db')
@@ -79,7 +92,7 @@ def CreateStartInfo(round):
                     "Для начала нажмите или напишите  'Старт'" \
                     f"\n Вы уже выучили {count_words} из 50" \
                     f"\n Последняя дата опроса: {date_last_round}"
-
+    session.close()
     return HELLO_MESSAGE
 
 
@@ -117,11 +130,9 @@ START_KEYBOARD = {
 def CreateKeyboard(round):
     """
     создание клавиатуры для отправки перевода слова
-    :param user: пользователь, для которого создается клавиатура
+    :param round: раунд пользователя, для которого создается клавиатура
     :return: клавиатура
     """
-    # получение необходимых данных из БД
-    session = Session()
     translation = []
     translation.append(round.word["translation"])
     while len(translation) != 4:
@@ -205,7 +216,7 @@ with open('english_words.json', 'r', encoding='utf-8') as f:
 def choose_word(round):
     """
     выбор предлагаемого слова пользователю
-    :param user: пользователь, для которого выбирается слово
+    :param round: раунд пользователя, для которого выбирается слово
     :return: выбранное слово
     """
     session = Session()
@@ -221,6 +232,7 @@ def choose_word(round):
             Learning.word == round.word["word"]).first()
         if right_answer >= 20:
             choose_word(round)
+    session.close()
 
 
 # получение текущего слова пользователя по его id
@@ -231,10 +243,9 @@ def get_round(user_id):
 def send_message(round, correct):
     """
     отправка вопроса пользователю и
-    :param user: пользователь, которому отправляется вопрос
+    :param round: раунд пользователя, которому отправляется вопрос
     :param correct: правильность введенного перевода слова
     """
-    session = Session()
     # отправка сообщения о правильности введенного перевода слова
     if correct is not None:
         viber.send_messages(round.viber_id, TextMessage(text=correct))
@@ -256,7 +267,7 @@ def get_answer(text, round):
     """
     получение ответа от пользователя
     :param text: полученное сообщение
-    :param user: пользователь, от которого получили сообщение
+    :param round: раунд пользователя, от которого получили сообщение
     """
     session = Session()
     correct = 'Неверно'
@@ -269,6 +280,7 @@ def get_answer(text, round):
         session.commit()
         correct = 'Верно'
     round.count_answers += 1
+    session.close()
     # отправка следующего сообщения пользователю
     send_message(round, correct)
 
@@ -276,9 +288,8 @@ def get_answer(text, round):
 def send_example(round):
     """
     отправка примера использования
-    :param user: пользователь, которому нужно отправить пример
+    :param round: раунд пользователя, которому нужно отправить пример
     """
-    session = Session()
     # отправка примера использования пользователю
     number = random.choice(range(len(round.word["examples"])))
     bot_response = TextMessage(text=f'{round.word["examples"][number]}',
@@ -294,23 +305,9 @@ def hello():
     return f"hello {count}"
 
 
-i = 0
-
-
-class Round:
-    def __init__(self, viber_id):
-        self.viber_id = viber_id
-        self.word = {}
-        self.count_answers = 0
-        self.correct_count = 0
-
-
-user_round = {}
-
-
 @app.route("/incoming", methods=['POST'])
 def incoming():
-    Base.metadata.create_all(engine)
+    # Base.metadata.create_all(engine)
     session = Session()
     viber_request = viber.parse_request(request.get_data())
     # отправка приветственного сообщения и стартовой клавиатуры
@@ -336,7 +333,7 @@ def incoming():
             text = message.text
             if text == 'Старт':
                 user.last_time_visit = datetime.datetime.utcnow()
-                user.time_reminder = datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
+                user.time_reminder = datetime.datetime.utcnow() + datetime.timedelta(minutes=40)
                 session.commit()
                 round.correct_count = 0
                 round.count_answers = 0
@@ -354,11 +351,12 @@ def incoming():
                 session.commit()
             else:
                 get_answer(text, round)
+    session.close()
     return Response(status=200)
 
 
 if __name__ == "__main__":
-    Base.metadata.create_all(engine)
+    # Base.metadata.create_all(engine)
     app.run(host="127.0.0.1", port=80)
     # session = Session()
     # users = session.query(User)
