@@ -332,7 +332,7 @@ def incoming():
             text = message.text
             if text == 'Старт':
                 user.last_time_visit = datetime.datetime.utcnow()
-                user.time_reminder = datetime.datetime.utcnow() + datetime.timedelta(minutes=40)
+                user.time_reminder = datetime.datetime.utcnow() + datetime.timedelta(minutes=5)
                 session.commit()
                 round.correct_count = 0
                 round.count_answers = 0
@@ -346,7 +346,7 @@ def incoming():
             elif text == 'Пример использования':
                 send_example(round)
             elif text == 'Напомнить  через 30 минут':
-                user.time_reminder = datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
+                user.time_reminder = datetime.datetime.utcnow() + datetime.timedelta(minutes=3)
                 session.commit()
             else:
                 get_answer(text, round)
