@@ -13,7 +13,7 @@ bot_configuration = BotConfiguration(
 viber = Api(bot_configuration)
 
 # стартовая клавиатура
-KEYBOARD = {
+REMIND_KEYBOARD = {
     "Type": "keyboard",
     "Buttons": [
         {
@@ -35,7 +35,7 @@ KEYBOARD = {
             "BgMediaType": "picture",
             "BgLoop": True,
             "ActionType": "reply",
-            "ActionBody": "Напомнить",
+            "ActionBody": "Напомнить  через 30 минут",
             "ReplyType": "message",
             "Text": "Напомнить  через 30 минут"
         }, {
@@ -66,16 +66,10 @@ def timed_job():
     session = Session()
     users = session.query(User)
     for u in users:
-        # if (datetime.datetime.utcnow() - u.last_time_visit > datetime.timedelta(minutes=3)):
-        #     u.time_reminder = datetime.datetime.utcnow()
-        # \
-        #     and (datetime.datetime.utcnow() - u.last_time_reminder > datetime.timedelta(minutes=3)):
-        # if ((u not in user_reminder) or (
-        #         datetime.datetime.utcnow() - user_reminder[u] > datetime.timedelta(minutes=3))):
-        #     user_reminder[u] = datetime.datetime.utcnow()
         if datetime.datetime.utcnow() >= u.time_reminder:
-            viber.send_messages(u.viber_id, [TextMessage(text="Время повторить слова", keyboard=KEYBOARD,
-                                                         tracking_data='tracking_data')])
+            bot_response = TextMessage(text='Время повторить слова',
+                                       keyboard=REMIND_KEYBOARD, tracking_data='tracking_data')
+            viber.send_messages(u.viber_id, [bot_response])
 
 
 sched.start()

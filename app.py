@@ -82,7 +82,6 @@ def CreateStartInfo(round):
     :param round: раунд пользователя, для которого создается сообщение
     :return: информационное сообщение
     """
-    # db = MyDataBase('database.db')
     # получение необходимых данных из БД
     session = Session()
     user_id = session.query(User.id).filter(User.viber_id == round.viber_id)
@@ -346,7 +345,7 @@ def incoming():
                         tracking_data='tracking_data')])
             elif text == 'Пример использования':
                 send_example(round)
-            elif text == 'Напомнить':
+            elif text == 'Напомнить  через 30 минут':
                 user.time_reminder = datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
                 session.commit()
             else:
